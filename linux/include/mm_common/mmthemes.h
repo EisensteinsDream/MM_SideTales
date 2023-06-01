@@ -1,0 +1,55 @@
+#ifndef MM_COMMON_THEMES_H
+#define MM_COMMON_THEMES_H
+
+#include <plex.h>
+
+#include "meta/mmcommon_filepaths.h"
+
+typedef enum
+{
+	MM_COMMON_THEMEID_NONE = 0,
+	MM_COMMON_THEMEID_MAIN = 1,
+	MM_COMMON_THEMEID_EXTRAPLOCAN = 2,
+	MM_COMMON_THEMEID_NEWSROOM = 3,
+	MM_COMMON_THEMEID_COMEDY = 4,
+	MM_COMMON_THEMEID_PANIC = 5,
+	MM_COMMON_THEMEID_DARKCITY = 6,
+	MM_COMMON_THEMEID_PAMALEANA = 7,
+	MM_COMMON_THEMEID_SUSPENSE = 8,
+	MM_COMMON_THEMEID_DAYTODAY = 9,
+	MM_COMMON_THEMEID_DREAM = 10
+} MM_COMMON_THEMEID;
+
+typedef enum
+{
+	MM_COMMON_SOUNDEFFECT_NONE = 0,
+	MM_COMMON_SOUNDEFFECT_KNOCKING = 1,
+	MM_COMMON_SOUNDEFFECT_SHOCK = 2,
+	MM_COMMON_SOUNDEFFECT_SURREALHONKHONK = 3,
+	MM_COMMON_SOUNDEFFECT_PAMENGINEREV = 4,
+	MM_COMMON_SOUNDEFFECT_PAMENGINERUN = 5,
+	MM_COMMON_SOUNDEFFECT_PAMENGINESTRUGGLE = 6,
+	MM_COMMON_SOUNDEFFECT_CRASH = 7,
+	MM_COMMON_SOUNDEFFECT_SURREALGLASSCRACK = 8,
+	MM_COMMON_SOUNDEFFECT_ZOOMBY = 9
+} MM_COMMON_SOUNDEFFECT;
+
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+	extern void MM_COMMON_playTheme(const MM_COMMON_THEMEID themeID);
+
+	extern int64_t MM_COMMON_playSoundEffect(const MM_COMMON_SOUNDEFFECT effect);
+	extern int64_t MM_COMMON_playSoundEffectVolume(const double volume, const MM_COMMON_SOUNDEFFECT effect);
+	extern int64_t MM_COMMON_loopSoundEffect(const MM_COMMON_SOUNDEFFECT effect);
+
+	extern void MM_COMMON_stopSoundEffect(const int64_t index);
+	extern void MM_COMMON_setSoundEffectVolume(const double volume, const int64_t index);
+
+	extern void MM_COMMON_updateTheme();
+#ifdef __cplusplus
+}
+#endif
+
+#endif

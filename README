@@ -1,0 +1,69 @@
+-------------------
+MM Side Tales (ie. The Epic of Lunch) : VERSION 3
+-------------------
+Subgames (starting with 0 rather than 1 because I'm a programmer and programmers are a pain in the ass that way):
+-------------------
+
+MMS0 - Vol. 1: Defamation
+MMS1 - Vol. 2: Dome City Panic
+
+-------------------
+Preface
+-------------------
+
+Ok, so, this is a vanity project of mine. It's made by one person and was initially made within a short span of time (3 weeks) and has been polished on the side. Source is provided but, be forewarned, it is not the most clinical or dexterous code. It’s written in C (without the plus-plus) and was intended more as an experiment in what I could do in a relatively short amount of time than a showcase. Eventually, I will indeed clean this code up. Yet, this is one of many projects so it's not priority one.
+
+If you don’t feel really comfortable with C code then I wouldn’t modify it. I would, however, recommend anybody the chance to freely look it over. But don’t take it as an example on how to do things properly.
+
+Both of the dependent libraries contained PLEX and mm_common are closed source for the moment. They will eventually be released when I feel comfortable enough with them. They are not presentable at the moment, I’m afraid.
+
+Except for code neccessary to run dependecies, everything contained is released under the MIT license (separate file contained in this folder).
+
+The plan now, is to release 4 of these ‘side tales’ year by year as a precursor to the story and style of a bigger project still in development. Having the same format of a small arcade-style minigame sandwiched between 2 diorama plays.
+
+All graphics, music, code and writing done by me (Eisenstein's Dream). Sorry about that...
+
+-------------------
+HOW TO RUN:
+-------------------
+
+Linux:
+
+	1. Make sure you acquire all dependencies (SDL2, SDL2_image, portaudio, clang, libsndfile)
+	2. simply run “run.sh” and it should make and run the game.
+
+* WINDOWS VERSION IS TEMPORARILY UNAVAILABLE *
+
+-------------------
+NOTE: feel free to check out the config_en file for configuration options. They should be self explanatory. Not all of them are yet implemented. Those that aren't are marked after the pound sign. Essentially, you just have to change the value after the '='. if it's a true/false value just type 'true' or 'false'. If it's a number type a number, etc.
+-------------------
+
+
+VERSION 1:
+
+	* changed sprite theater to allow enter/return and the pressing right d-pad to change frames.
+	* temporarily removed the windows version over some issues
+	* no longer will you need clang to compile linux version, gcc should work fine
+	* added 'deletemeafterbuild' files, these are just placeholders to make sure that certain crucial - yet empty - folders are not deleted when the repository is uploaded. You can delete these after you run the game once. (EDIT: this is only relevant to the linux version)
+
+VERSION 2:
+
+	* fixed the shading on Pamaleana's skirt when she's holding the script so it doesn't look flipped
+	* minor dialog fixes
+	* minor sprite alterations in part 3
+	* minor dialog additions
+	* fixed a sprite bug with the director
+	* moved a lot of the resources to the MM_common library source (which will be released eventually)
+	* many many improvements on the PLEX library source (which will also be released eventually)
+	* this document has been greatly cleaned up
+	* made it to where the comedic timing for pause gags and stopping sound was accurate rather than stopping sound a frame before the pause
+	* adjusted the makefile so rebuild, rrebuild (release rebuild), and drebuild (debug release build) all work properly
+	* changed most MMS0 specific elements to be MMS since the sequels will be compiled into the same source
+	* redid the versioning naming system because it was inconsistent and might be confused with the minigame versions
+	* fixed a bug in the minigame that got the coffee drinking bastards stuck in tables
+	* created a simple mechanism to indicate that chapter 1 was completed
+
+VERSION 3:
+
+	* completed the second chapter
+	* moved to new repository
