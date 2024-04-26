@@ -1,0 +1,160 @@
+#include "utility/prominencemachine.h"
+
+PLEX_PROMINENCEMACHINE* PLEX_genProminenceMachineInt(const size_t line, const char* const filename)
+{
+	PLEX_PROMINENCEMACHINE* ret = PLEX_allocInt(sizeof(PLEX_PROMINENCEMACHINE), line, filename);
+
+	if(ret == NULL)
+	{
+		PLEX_error2(PLEX_ERROR_CATEGORY_PROMINENCEMACHINE, PLEX_ERROR_ALLOCFAIL, PLEX_ERROR_SEVERITY_FATAL, PLEX_ERRORMESS_PROMINENCEMACHINE_ONGENPROMINENCE, PLEX_ERRORMESS_PROMINENCEMACHINE_PROMINENCEMACHINE);
+		return NULL;
+	}
+
+	ret->prominenceCap = 0;
+	ret->prominences = PLEX_genExpandArrayInt(PLEX_getMemProfilePromPreload(), sizeof(uint32_t), line, filename);
+
+	return ret;
+}
+
+void PLEX_destroyProminenceMachine(PLEX_PROMINENCEMACHINE** toDestroy)
+{
+	PLEX_PROMINENCEMACHINE* toDestroyPtr = NULL;
+
+	if(toDestroy == NULL)
+	{
+		PLEX_error2(PLEX_ERROR_CATEGORY_PROMINENCEMACHINE, PLEX_ERROR_FREENULL, PLEX_ERROR_SEVERITY_BADSTYLE, PLEX_ERRORMESS_PROMINENCEMACHINE_ONDESTROYPROMINENCE, PLEX_ERRORMESS_PROMINENCEMACHINE_PROMINENCEMACHINE);
+		return;
+	}
+
+	toDestroyPtr = *toDestroy;
+
+	if(toDestroyPtr == NULL)
+	{
+		PLEX_error2(PLEX_ERROR_CATEGORY_PROMINENCEMACHINE, PLEX_ERROR_FREENULL, PLEX_ERROR_SEVERITY_BADSTYLE, PLEX_ERRORMESS_PROMINENCEMACHINE_ONDESTROYPROMINENCE, PLEX_ERRORMESS_PROMINENCEMACHINE_PROMINENCEMACHINE);
+		return;
+	}
+
+	PLEX_destroyExpandArray(&toDestroyPtr->prominences);
+
+	PLEX_dealloc(toDestroy);
+}
+
+int64_t PLEX_addProminenceInt(const uint32_t prominence, PLEX_PROMINENCEMACHINE* machine, const size_t linenum, const char* const filename)
+{
+	uint32_t* prominencePtr = NULL;
+
+	if(machine == NULL)
+	{
+		PLEX_error2(PLEX_ERROR_CATEGORY_PROMINENCEMACHINE, PLEX_ERROR_ISNULL, PLEX_ERROR_SEVERITY_BADSTYLE, PLEX_ERRORMESS_PROMINENCEMACHINE_ONADDINGPROMINENCE, PLEX_ERRORMESS_PROMINENCEMACHINE_PROMINENCEMACHINE);
+		return -1;
+	}
+
+	if(machine->prominences == NULL)
+	{
+		PLEX_error2(PLEX_ERROR_CATEGORY_PROMINENCEMACHINE, PLEX_ERROR_ISNULL, PLEX_ERROR_SEVERITY_FATAL, PLEX_ERRORMESS_PROMINENCEMACHINE_ONADDINGPROMINENCE, PLEX_ERRORMESS_PROMINENCEMACHINE_PROMINENCEMACHINES);
+		return -1;
+	}
+
+	if(!PLEX_incrementExpandArrayInt(machine->prominences, linenum, filename))
+	{
+		PLEX_error2(PLEX_ERROR_CATEGORY_PROMINENCEMACHINE, PLEX_ERROR_INCREMENT, PLEX_ERROR_SEVERITY_MINOR, PLEX_ERRORMESS_PROMINENCEMACHINE_ONADDINGPROMINENCE, PLEX_ERRORMESS_PROMINENCEMACHINE_PROMINENCEMACHINES);
+		return -1;
+	}
+
+	prominencePtr = (uint32_t*)PLEX_getExpandArrayLast(machine->prominences);
+
+	if(prominencePtr == NULL)
+	{
+		PLEX_error2(PLEX_ERROR_CATEGORY_PROMINENCEMACHINE, PLEX_ERROR_NOGETARRAY, PLEX_ERROR_SEVERITY_FATAL, PLEX_ERRORMESS_PROMINENCEMACHINE_ONADDINGPROMINENCE, PLEX_ERRORMESS_PROMINENCEMACHINE_PROMINENCEMACHINE);
+		return -1;
+	}
+
+	*prominencePtr = prominence;
+
+	machine->prominenceCap += prominence;
+
+	return PLEX_expandArrayCount(machine->prominences) - 1;
+}
+
+void PLEX_removeProminence(const size_t index, PLEX_PROMINENCEMACHINE* machine)
+{
+	size_t count = 0;
+
+	uint32_t* removeAmount = NULL;
+
+	if(machine == NULL)
+	{
+		PLEX_error2(PLEX_ERROR_CATEGORY_PROMINENCEMACHINE, PLEX_ERROR_ISNULL, PLEX_ERROR_SEVERITY_BADSTYLE, PLEX_ERRORMESS_PROMINENCEMACHINE_ONREMOVINGPROMINENCE, PLEX_ERRORMESS_PROMINENCEMACHINE_PROMINENCEMACHINE);
+		return;
+	}
+
+	if(machine->prominences == NULL)
+	{
+		PLEX_error2(PLEX_ERROR_CATEGORY_PROMINENCEMACHINE, PLEX_ERROR_ISNULL, PLEX_ERROR_SEVERITY_MINOR, PLEX_ERRORMESS_PROMINENCEMACHINE_ONREMOVINGPROMINENCE, PLEX_ERRORMESS_PROMINENCEMACHINE_PROMINENCEMACHINE);
+		return;
+	}
+
+	count = PLEX_expandArrayCount(machine->prominences);
+
+	if(index >= count)
+	{
+		PLEX_error2(PLEX_ERROR_CATEGORY_PROMINENCEMACHINE, PLEX_ERROR_OVERLIMIT, PLEX_ERROR_SEVERITY_MINOR, PLEX_ERRORMESS_PROMINENCEMACHINE_ONREMOVINGPROMINENCE, PLEX_ERRORMESS_GENERIC_INDEX);
+		return;
+	}
+
+	removeAmount = (uint32_t*)PLEX_getExpandArrayEntry(index, machine->prominences);
+
+	if(removeAmount == NULL)
+	{
+		PLEX_error2(PLEX_ERROR_CATEGORY_PROMINENCEMACHINE, PLEX_ERROR_NOGETARRAY, PLEX_ERROR_SEVERITY_FATAL, PLEX_ERRORMESS_PROMINENCEMACHINE_ONREMOVINGPROMINENCE, PLEX_ERRORMESS_PROMINENCEMACHINE_PROMINENCEMACHINE);
+		return;
+	}
+
+	machine->prominenceCap -= *removeAmount;
+
+	PLEX_removeExpandArray(index, machine->prominences);
+}
+
+int64_t PLEX_getProminence(const PLEX_PROMINENCEMACHINE* machine)
+{
+	uint64_t nextProminence = 0;
+	uint64_t prominencePoint = 0;
+
+	if(machine == NULL)
+	{
+		PLEX_error2(PLEX_ERROR_CATEGORY_PROMINENCEMACHINE, PLEX_ERROR_GETNULL, PLEX_ERROR_SEVERITY_BADSTYLE, PLEX_ERRORMESS_PROMINENCEMACHINE_ONGETPROMINENCE, PLEX_ERRORMESS_PROMINENCEMACHINE_PROMINENCEMACHINE);
+		return -1;
+	}
+
+	prominencePoint = PLEX_randomNumber(0, machine->prominenceCap);
+
+	printf("POINT: %lu\r\n", (unsigned long)prominencePoint);
+
+	for(size_t ze = 0; ze < PLEX_expandArrayCount(machine->prominences); ++ze)
+	{
+		uint32_t* prominencePtr = PLEX_getExpandArrayEntry(ze, machine->prominences);
+
+		nextProminence += *prominencePtr;
+
+		if(prominencePoint < nextProminence) return ze;
+	}
+
+	return PLEX_expandArrayCount(machine->prominences);
+}
+
+size_t PLEX_getProminenceCount(const PLEX_PROMINENCEMACHINE* machine)
+{
+	if(machine == NULL)
+	{
+		PLEX_error2(PLEX_ERROR_CATEGORY_PROMINENCEMACHINE, PLEX_ERROR_GETNULL, PLEX_ERROR_SEVERITY_BADSTYLE, PLEX_ERRORMESS_PROMINENCEMACHINE_ONGETPROMINENCECOUNT, PLEX_ERRORMESS_PROMINENCEMACHINE_PROMINENCEMACHINE);
+		return 0;
+	}
+
+	if(machine->prominences == NULL)
+	{
+		PLEX_error2(PLEX_ERROR_CATEGORY_PROMINENCEMACHINE, PLEX_ERROR_GETNULL, PLEX_ERROR_SEVERITY_BADSTYLE, PLEX_ERRORMESS_PROMINENCEMACHINE_ONGETPROMINENCECOUNT, PLEX_ERRORMESS_PROMINENCEMACHINE_PROMINENCEMACHINES);
+		return 0;
+	}
+
+	return PLEX_expandArrayCount(machine->prominences);
+}

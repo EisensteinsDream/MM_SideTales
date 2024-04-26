@@ -1,0 +1,231 @@
+#include "mem/memprofile.h"
+
+typedef enum
+{
+	P_MEMPROFILE_LOW = 0,
+	P_MEMPROFILE_MEDIUM = 1,
+	P_MEMPROFILE_HIGH = 2,
+	P_MEMPROFILE_VERYHIGH = 3
+} P_MEMPROFILE;
+
+static P_MEMPROFILE p_profile = P_MEMPROFILE_LOW;
+
+void PLEX_setMemProfile(const uint8_t profile)
+{
+	p_profile = P_MEMPROFILE_LOW;
+
+	switch(profile)
+	{
+		case 1: p_profile = P_MEMPROFILE_MEDIUM; return;
+		case 2: p_profile = P_MEMPROFILE_HIGH; return;
+		case 3: p_profile = P_MEMPROFILE_VERYHIGH; return;
+	};
+}
+
+size_t PLEX_getMemProfilePreload()
+{
+	switch(p_profile)
+	{
+		case P_MEMPROFILE_MEDIUM: return PLEX_MEMLIMIT_MEM_PRELOAD_MEDIUM;
+		case P_MEMPROFILE_HIGH: return PLEX_MEMLIMIT_MEM_PRELOAD_HIGH;
+		case P_MEMPROFILE_VERYHIGH: return PLEX_MEMLIMIT_MEM_PRELOAD_VERYHIGH;
+		default: break;
+	};
+
+	return PLEX_MEMLIMIT_MEM_PRELOAD_LOW;
+}
+
+size_t PLEX_getMemProfileMemReuse()
+{
+	switch(p_profile)
+	{
+		case P_MEMPROFILE_MEDIUM: return PLEX_MEMLIMIT_MEMREUSE_MEDIUM;
+		case P_MEMPROFILE_HIGH: return PLEX_MEMLIMIT_MEMREUSE_HIGH;
+		case P_MEMPROFILE_VERYHIGH: return PLEX_MEMLIMIT_MEMREUSE_VERYHIGH;
+		default: break;
+	};
+
+	return PLEX_MEMLIMIT_MEMREUSE_LOW;
+}
+
+size_t PLEX_getMemProfileDefaultPreload()
+{
+	switch(p_profile)
+	{
+		case P_MEMPROFILE_MEDIUM: return PLEX_MEMLIMIT_DEFAULTS_MEDIUM;
+		case P_MEMPROFILE_HIGH: return PLEX_MEMLIMIT_DEFAULTS_HIGH;
+		case P_MEMPROFILE_VERYHIGH: return PLEX_MEMLIMIT_DEFAULTS_VERYHIGH;
+		default: break;
+	};
+
+	return PLEX_MEMLIMIT_DEFAULTS_LOW;
+}
+
+size_t PLEX_getMemProfileDrawlistPreload()
+{
+	switch(p_profile)
+	{
+		case P_MEMPROFILE_MEDIUM: return PLEX_MEMLIMIT_DRAWLIST_MEDIUM;
+		case P_MEMPROFILE_HIGH: return PLEX_MEMLIMIT_DRAWLIST_HIGH;
+		case P_MEMPROFILE_VERYHIGH: return PLEX_MEMLIMIT_DRAWLIST_VERYHIGH;
+		default: break;
+	};
+
+	return PLEX_MEMLIMIT_DRAWLIST_LOW;
+}
+
+size_t PLEX_getMemProfileFramePreload()
+{
+	switch(p_profile)
+	{
+		case P_MEMPROFILE_MEDIUM: return PLEX_MEMLIMIT_FRAMEPRELOAD_MEDIUM;
+		case P_MEMPROFILE_HIGH: return PLEX_MEMLIMIT_FRAMEPRELOAD_HIGH;
+		case P_MEMPROFILE_VERYHIGH: return PLEX_MEMLIMIT_FRAMEPRELOAD_VERYHIGH;
+		default: break;
+	};
+
+	return PLEX_MEMLIMIT_FRAMEPRELOAD_LOW;
+}
+
+size_t PLEX_getMemProfileAnimationPreload()
+{
+	switch(p_profile)
+	{
+		case P_MEMPROFILE_MEDIUM: return PLEX_MEMLIMIT_ANIMATIONMAX_MEDIUM;
+		case P_MEMPROFILE_HIGH: return PLEX_MEMLIMIT_ANIMATIONMAX_HIGH;
+		case P_MEMPROFILE_VERYHIGH: return PLEX_MEMLIMIT_ANIMATIONMAX_VERYHIGH;
+		default: break;
+	};
+
+	return PLEX_MEMLIMIT_ANIMATIONMAX_LOW;
+}
+
+size_t PLEX_getMemProfileScreenEffectsPreload()
+{
+	switch(p_profile)
+	{
+		case P_MEMPROFILE_MEDIUM: return PLEX_MEMLIMIT_SCREENEFFECTS_MEDIUM;
+		case P_MEMPROFILE_HIGH: return PLEX_MEMLIMIT_SCREENEFFECTS_HIGH;
+		case P_MEMPROFILE_VERYHIGH: return PLEX_MEMLIMIT_SCREENEFFECTS_VERYHIGH;
+		default: break;
+	};
+
+	return PLEX_MEMLIMIT_SCREENEFFECTS_LOW;
+}
+
+size_t PLEX_getMemProfileTexturePreload()
+{
+	switch(p_profile)
+	{
+		case P_MEMPROFILE_MEDIUM: return PLEX_MEMLIMIT_TEXTUREPRELOAD_MEDIUM;
+		case P_MEMPROFILE_HIGH: return PLEX_MEMLIMIT_TEXTUREPRELOAD_HIGH;
+		case P_MEMPROFILE_VERYHIGH: return PLEX_MEMLIMIT_TEXTUREPRELOAD_VERYHIGH;
+		default: break;
+	};
+
+	return PLEX_MEMLIMIT_TEXTUREPRELOAD_LOW;
+}
+
+size_t PLEX_getMemProfileLineParsePreload()
+{
+	switch(p_profile)
+	{
+		case P_MEMPROFILE_MEDIUM: return PLEX_MEMLIMIT_LINEPARSE_MEDIUM;
+		case P_MEMPROFILE_HIGH: return PLEX_MEMLIMIT_LINEPARSE_HIGH;
+		case P_MEMPROFILE_VERYHIGH: return PLEX_MEMLIMIT_LINEPARSE_VERYHIGH;
+		default: break;
+	};
+
+	return PLEX_MEMLIMIT_LINEPARSE_LOW;
+}
+
+size_t PLEX_getMemProfileTokenPreload()
+{
+	switch(p_profile)
+	{
+		case P_MEMPROFILE_MEDIUM: return PLEX_MEMLIMIT_TOKENLIMIT_MEDIUM;
+		case P_MEMPROFILE_HIGH: return PLEX_MEMLIMIT_TOKENLIMIT_HIGH;
+		case P_MEMPROFILE_VERYHIGH: return PLEX_MEMLIMIT_TOKENLIMIT_VERYHIGH;
+		default: break;
+	};
+
+	return PLEX_MEMLIMIT_TOKENLIMIT_LOW;
+}
+
+size_t PLEX_getMemProfileSpriteTheaterSlide()
+{
+	switch(p_profile)
+	{
+		case P_MEMPROFILE_MEDIUM: return PLEX_MEMLIMIT_SPRITETHEATER_SLIDE_MEDIUM;
+		case P_MEMPROFILE_HIGH: return PLEX_MEMLIMIT_SPRITETHEATER_SLIDE_HIGH;
+		case P_MEMPROFILE_VERYHIGH: return PLEX_MEMLIMIT_SPRITETHEATER_SLIDE_VERYHIGH;
+		default: break;
+	};
+
+	return PLEX_MEMLIMIT_SPRITETHEATER_SLIDE_LOW;
+}
+
+size_t PLEX_getMemProfileActor()
+{
+	switch(p_profile)
+	{
+		case P_MEMPROFILE_MEDIUM: return PLEX_MEMLIMIT_SPRITETHEATER_ACTOR_MEDIUM;
+		case P_MEMPROFILE_HIGH: return PLEX_MEMLIMIT_SPRITETHEATER_ACTOR_HIGH;
+		case P_MEMPROFILE_VERYHIGH: return PLEX_MEMLIMIT_SPRITETHEATER_ACTOR_VERYHIGH;
+		default: break;
+	};
+
+	return PLEX_MEMLIMIT_SPRITETHEATER_ACTOR_LOW;
+}
+
+size_t PLEX_getMemProfileActorChange()
+{
+	switch(p_profile)
+	{
+		case P_MEMPROFILE_MEDIUM: return PLEX_MEMLIMIT_SPRITETHEATER_ACTORCHANGE_MEDIUM;
+		case P_MEMPROFILE_HIGH: return PLEX_MEMLIMIT_SPRITETHEATER_ACTORCHANGE_HIGH;
+		case P_MEMPROFILE_VERYHIGH: return PLEX_MEMLIMIT_SPRITETHEATER_ACTORCHANGE_VERYHIGH;
+		default: break;
+	};
+
+	return PLEX_MEMLIMIT_SPRITETHEATER_ACTORCHANGE_LOW;
+}
+
+size_t PLEX_getMemProfileMusicChange()
+{
+	switch(p_profile)
+	{
+		case P_MEMPROFILE_MEDIUM: return PLEX_MEMLIMIT_SPRITETHEATER_MUSICCHANGE_MEDIUM;
+		case P_MEMPROFILE_HIGH: return PLEX_MEMLIMIT_SPRITETHEATER_MUSICCHANGE_HIGH;
+		case P_MEMPROFILE_VERYHIGH: return PLEX_MEMLIMIT_SPRITETHEATER_MUSICCHANGE_VERYHIGH;
+		default: break;
+	};
+
+	return PLEX_MEMLIMIT_SPRITETHEATER_MUSICCHANGE_LOW;
+}
+
+size_t PLEX_getMemProfileGenStart()
+{
+	switch(p_profile)
+	{
+		case P_MEMPROFILE_MEDIUM: return PLEX_MEMLIMIT_GENSTART_MEDIUM;
+		case P_MEMPROFILE_HIGH: return PLEX_MEMLIMIT_GENSTART_HIGH;
+		case P_MEMPROFILE_VERYHIGH: return PLEX_MEMLIMIT_GENSTART_VERYHIGH;
+		default: break;
+	};
+
+	return PLEX_MEMLIMIT_GENSTART_LOW;
+}
+
+size_t PLEX_getMemProfilePromPreload()
+{
+	switch(p_profile)
+	{
+		case P_MEMPROFILE_MEDIUM: return PLEX_MEMLIMIT_PROMPRELOAD_MEDIUM;
+		case P_MEMPROFILE_HIGH: return PLEX_MEMLIMIT_PROMPRELOAD_HIGH;
+		case P_MEMPROFILE_VERYHIGH: return PLEX_MEMLIMIT_PROMPRELOAD_VERYHIGH;
+		default: break;
+	};
+
+	return PLEX_MEMLIMIT_PROMPRELOAD_LOW;
+}

@@ -1,0 +1,117 @@
+------------------------------------------------------------
+MMS V.1:
+------------------------------------------------------------
+
+This is version 1 of MMS. I originally released this on December 25, 2023. However, I pulled all versions realizing it was not well ready. There should be no copies of the original versions on the internet. Hopefully, nobody stumbled on them and preserved them because they're not great. It has been greatly reworked over the past 4 months to be cleaner, better tested, and functioning. That's why this has been reversioned as 1.0. There will be a 2.0 with some minor bug fixes, major bug fixes if needed, and some basic code cleanup I haven't been able to get to.
+
+So, what is MMS? It is the MM Side tales. It is a companion piece of a much bigger JRPG-style project that I plan to release sometime in mid-2026 (called simply MM). The gameplay of MMS is not a JRPG but 3 minigames with each their own particular style of gameplay. They are also intertwined in a series of story events presented as kind of a 'puppet show'. This should give a basic idea of what kind of tone I plan for the main project, MM. For that reason it functions as an aesthetic sampler.
+
+Some of these minigames are a bit tricky so I've included a 'Tips' file with the release in case some of them get a bit frustrating. The Tips file won't tell you exactly what you need to beat any of them, but may infer some hints that help you get there.
+
+------------------------------------------------------------
+Installation:
+------------------------------------------------------------
+
+NOTE: Currently MMS will only run in windows and linux. It's possible with very little modification to make it work on other posix based systems but I haven't gotten around to it. Eventually, also, I'm planning on releasing an in-browser version with enscriptem but that's a long long term goal. You should also be able to compile to both 32-bit and 64-bit systems but 64 bit is highly recommended.
+
+Linux:
+
+	NOTE: MMS requires an OS with a posix standard of at least 7. It's very very rare that you'll be running a version of Linux that this isn't the case. Unless you're running a really dated distribution, it should be fine. So if you don't know what that means, it doesn't matter. It also compiles to C18 which should not be an issue if you have gcc updated.
+
+	> make sure to install the following libraries on your system: shell, make, gcc, portaudio, sdl2, sdl2_image, and libsndfile. These should all be readily available through most package managers. The vast majority of linux systems come with the first three already installed. Some like arch might not have 'make' or even 'shell' but I think they come with some kind of base_devel package.
+
+	> simply go into the linux folder and open a terminal. Type 'sh install.sh' into that terminal. If you have all the dependencies it should install. If not, it's likely a system or dependency issues. Read error messages carefully.
+
+	> with your terminal still open type sh run.sh. If it works, everything went well. If not, you can try typing 'sh install.sh' and the messages should clue you into anything that might be wrong. These are usually just errors returned by gnu make or gcc. Searching their meaning should get you to why install didn't happen. Usually, it's just a missing dependency. Check to make sure you have all the above installed and make sure you have sdl2 and sdl2_image instead of just sdl and sdl_image.
+
+Windows:
+
+	> Everything should be precompiled in the ./windows folder ready to go. Just click on either the mms32.exe or the mms64.exe for whether you want the 32 or 64 bit version.
+
+------------------------------------------------------------
+Config file:
+------------------------------------------------------------
+
+When you run MMS for the first time it should produce a file called 'config_en.pcfg'. This is a basic configuration file. Most the values either take a boolean ('false' is assumed if it's anything but 'true'), a number, or a string. String config values are experimental and currently MMS uses none of them. A lot of these you'll never really need to change. Some of them are just there for fun (changing the r, g, b values of the standard cursor value 0-255). Others are there for preference (disable sound is the one I've had to use through testing most extensively).
+
+NOTE: currently there's a small bug that for whatever reason won't print the comments describing what each individual value does. This will be fixed somewhat promptly.
+
+Performance configurations:
+
+	> There are a few performance options if MMS is being sluggish. The first is the 'texture dimension limit'. This should default to 10000. MMS loads very large textures which give it longish loading times at points. On some systems with lower VRAM this can cause textures to disappear entirely. If you lower this number, textures width or height cannot be larger than whatever number you put into it. If you see what appears to be images not rendering this is an option.
+
+	> Another is 'memory profile' which can be raised to precache more data in memory lower the amount of reserved memory during execution of the program. The number goes from 0-4. The higher the number is, the more ram it takes but the lower CPU overhead. On most modern systems, any of these numbers should be fine. But on low performance machines '4' may be a good option because even the lowest end computers available have enough RAM to handle MMS. This may be more relevant when I set up android and IOS versions. No reason this game shouldn't function eventually on cheap phones.
+
+	> The final is "copy heaaderless textures". If this value is 'true' on the load of most textures there will be an alternate 'headerless texture' created in the 'headerlesstex' folder. These are much larger than the compressed .png files they're loaded from. However, because they are uncompressed they load much more quickly than a regular image file. It's recommended to only keep this false if you are working with extremely limited drive space.
+
+Debugging configurations:
+
+	> You can use some debug values if you're interested in modifying the source. This is NOT recommended if you're not familiar with C programming as mentioned in more detail below. However, if you're comfortable with that PLEX (the custom library MMS is build off of) has a few debug features that are quite useful. Like a very specific readable error system and smart memory management.
+
+	> "print memory report" and "print memory report to file". The first indicates to print a memory report in the terminal at end of programming execution. This should tell you if anything in smart memory is allocated but not deallocated. Smart memory, of course, does deallocate everything at the end. However, not using the dealloc feature makes memory hangs possible. This also will tell you the plex functions where this is happens and give you other information which make it easier to locate hangs in a debugger. Of course "print memory report to file" into the ./error folder.
+
+	> There's also values that can control which errors are printed, shown, or silenced. These are determined by numbers from 0-4. With 0 being impossible errors, 1 being fatal errors, 2 being major errors, 3 being minor errors, and 4 being badstyle errors. Impossible and fatal errors will terminate the program no matter what you try to set it to. For this you can set 'print error threshold', 'show error threshold', and 'fatal error threshold'. print errors print to terminal, show errors pop up a window, fatal error threshold terminate the program.
+
+	> there's also boolean "print errors", "show errors", and "dump errors". Print means print to terminal. Show means show in pop up menu. Dump means dump to error log file. The first two usually you don't really need to make false unless they're annoying. 'Dump errors' is currrently not working due to a bug that I haven't had the time to fix yet.
+
+------------------------------------------------------------
+For Modification:
+------------------------------------------------------------
+
+MMS and the 2 custom libraries I wrote for it are all open source. They are written in C (without the ++) and for that reason takes a bit of an esoteric knowledge of low level programming to understand. If you're not comfortable with C/C++ then it's not recommended to mess around with the code. If you're familiar with C++ but not C it should probably be fine but I would recommend at least look into the differences between the 2. C does not just not have classes it doesn't have namespaces, templates, exceptions, overloaded functions, etc. You'll notice structs in use and a lot more usage of switches and enums. Also, there's some syntax differences and some small differences.
+
+I know the choice to chose C over C++ might be controversial (or over something more modern like Rust or C#). I have my reasons. I like the simplicity and directness of C. I like the fact that it's potentially really easy to bind C functions to pretty much any language (C++, Python, Ruby, Java, Javascript, C#, etc). Sometimes I lament not doing C-style C++. However, I feel there's no real point in compiling with the ++ when I can compile it C with very little added effort.
+
+With that said, It's open source for a reason. I am very much a fan of the ethics of open source. The moment you download this, it's your software. That's why I released this as MIT license. Not all dependencies are in this license, of course. I have the same attitude towards the resources which are also open source in my eyes. There is no encryption on any of them. I don't care if people reuse them however they want. Same with the ideas. I don't have any interest in preserving 'intellectual property' at all. I don't believe in it.
+
+Anyway, the main library I am using is PLEX (the source can be found in linux/Plexiglass_MMS) which is NOT a full game engine (Each minigame kind of has it's own engine). It is a utility layer built on top of SDL and PortAudio that makes various game design functions more centralized and easier. I'm planning to release a separate version of PLEX/Plexiglass eventually. So, atm, this version isn't well documented. Also, as described in the readme in that folder, it is not a complete version. I wouldn't use this for your own projects unless you're very very willing to figure it out without documentation and willing to plug holes when they arise.
+
+However, it might be worth familiarizing yourself with PLEX's source if you need to modify MMS itself. Or if you need to plug a hole that I neglected to.
+
+MM_Common is the second library. It is based off of PLEX and must link it. It must also have all of PLEX's headers in the './include/plex' folder and have all of PLEX's resources in the './resources/plex' folder. The 'install.sh' linux shell file will automatically copy all of these over. So, MM_Common needs libPLEX compiled to compile itself.
+
+MM_Common is more relevant to the main MM Project which is in development and shares some resources. However, it must be built in order to compile MMS.
+
+MMS can be compiled if PLEX is compiled and MM_Common is compiled. Like MM_Common it needs a copy of PLEX's resources in the './resources/plex' folder and the PLEX's headers in './include/plex'. It also needs MM_Common's resources in './resources/common' and it's headers in './include/mm_common' as well as being linked to MMS. Again, install.sh takes care of all of this.
+
+Install.sh does not compile a debug version but with some directory rearranging every piece of code can be loaded into any IDE and compiled. It should work just fine.
+
+Some notes about the structure of MMS (Not everything, eventually I'll write a more detailed document):
+
+	> MMS is split into 4 sections with three minigames with 'sprite theater' presentations. The last ending is a giant 'sprite theater' presentations.
+
+	> The 'Sprite Theater' sections are based off of PLEX's sprite theater system. These are the dramatic sections which kind of play like a diorama or puppet show. They are stored in the 'chapters' folders in in 'src' and 'include'.
+
+	> Also in the 'chapters' folders is an 'unlock' file which contains keywords and phrases in the 'unlock' file that is produced to tell the program which minigames the player has beaten and allows sprite theater sections and minigames to be skipped. This is a very primitive save file.
+
+	> Each of the minigames are in the 'minigame' folders in 'src' and 'include'. Notice with both the chapters and minigames I count from zero so the first minigame is minigame0, the second is minigame1, and the third is minigame2. This is a programmer's habit. In the game itself it's vol.1, vol.2, and vol.3 though. This gets confusing (it confuses me sometimes) but it's hard to shake those programmer's habits.
+
+	> All music is managed by the MM Common library.
+
+	> Everything I code is structured in a 'start', 'update', 'end' type structure. Where the 'update' and 'end' only run if the 'start' has been started, and the start will not start again until the 'end' happens. I try to be consistent with the terms but sometimes I phrase it as 'begin' rather than 'start'. Anyway, resources are usually reserved and allocated in 'start', they are used in 'update', and they are free'd in 'end'. The assumption is that you do all three. Also, the assumption is if any of these fail the program terminates because they are interdependent. Sometimes you will see a function that says 'run' and that means that function will start the 'start' and iterated through the 'update' until a kill signal is sent or it ends operations and then 'end' all within the function.
+
+	> If you notice the mms0.c, mms1.c, etc. have a standard shape. Where you have one large switch condition and then with each sprite theater section's end the iteration of a number, and at the end of the number a loop break. This maybe looks weird to some people especially people who don't deal in 'C'. But it's essentially how it works. This is the top layer of each 'volume'. So each individual section of the volume is gone through. One of these sections should contain a 'run' method for the correlating minigame. This is the entry point to whatever minigame.
+
+	> 2 of the mmsX.c files are split into multiple files. This is just because they have a much larger codebase than the others. Also, some of the aspects of them are stored in PLEX and MM_Common. Of course any function starting with 'PLEX_' or 'MM_COMMON' are functions inside of these libraries. Which both have source included in the linux folder. NOTE: again, Plexiglass_MMS is not a complete version of Plexiglass and should be handled with care. I honestly might not even recommend modifying it until I finish and release PLEX V.1 and set MMS to work with it. I do not intend on having MMS work with PLEX V.2 and beyond. But I also plan on fixing bugs in PLEX V.1 while working on PLEX V.2 when they arise. That's a complicated process that will be more effectively documented when I get to it.
+
+	> Inside the 'minigame' folders in 'src' and 'include' is the code in the minigames. Notice, I don't have a concurrent header file for every source file. Instead, since I'm doing procedural C rather than OOP C++, I have 5 header files: 'meta.h', 'struct.h', 'function.h', 'structbodies.h', and then a specific header for the minigame like 'minigame0.h'. All source files for the first minigame take in 'minigame0.h'. This way I don't have to piddle around with the order in which I call public functions but any source file can call any public functions. Plus, all public functions are easily readable in the 'function.h' header. An easy quick reference.
+
+	> The order in which these are included is always 'meta.h' -> 'struct.h' -> 'function.h' -> 'structbodies.h' -> header for minigame. This is the way I am planning to structure all projects in the future with exception of PLEX.
+
+	> 'meta.h' contained all macros, external header includes, and any sort of meta data needed for compilation.
+
+	> 'struct.h' contains the forward declaration of all structs, unions, and function prototypes. It also contains all enumerators and their type definitions (or should, sometimes the type definitions end up in structbodies.h and need to be moved back there).
+
+	> 'function.h' contains all the forward declarations of public functions. These must be passed pointers to structs and unions because the forward declarations precurse the definitions of struct contents making them incomplete types at this point. They also must include 'struct' or 'union' in the declaration of the pointer. This is because the type definitions have not been declared yet for structs or unions. It's a bit of a pain, but C earns it's reputation after all. However, the advantages of this type of structuring a program outweigh these teething pains. PLEX has a very streamlined system for errors and null checking so the safety concerns of passing or returning pointers can be easily mitigated with a little legwork.
+
+	> 'structbodies.h' here's where the structs and unions are declared themselves. This is also where the type definitions of structs and unions must occur. This is done this way so the struct bodies can be created with the knowledge of function prototypes, typedefs, etc. after the functions are declared. It's weird, yes, but C is very picky with the order in which things are placed and declared. This is a good quick reference if you want to know the contents of a struct or union.
+
+	> Then you have the header for the 'unit' or source files if you will. Each source file should after inheriting this have access to all public functions and structs and can use them in any order internally. Inside of them is also 'static' functions that are, of course, like encapsulated private functions. I try to only make functions public when I know multiple units use them. So there's a lot of stuff that the static functions do.
+
+	> Static functions are described in the source file they are in. Public functions are described in the 'function.h' file.
+
+	> More detailed documentation on the specifics of the minigames themselves will eventually be written. Because each kind of operates in it's own way due to the differences in playstyle and my craving for experimentation. This is why I use my own sort of engines rather than Unity or Godot. I get annoyed at the kind of homogenization that is occurring among the process of hobbyist game development.
+
+	> There is one layer above the chapters (which structurally exist above the minigames), and that funtions a lot like the mmsx.c files except on a layer above with a big switch that increments with each chapter. Of course, the main.c and main.h files also contain a lot of universal functions and allocate universal resources to be passed into the mmsX.c units. Also, these main units being the main entry point fo the entire collection of minigames. It also contains a screen that pops up from the values of the unlock file to allow the player to skip forward.
+
+Anyway, eventually I'll write a more detailed less rambly design document. The notes above, however, should be enough for somebody with a cursory knowledge of C to figure out what I'm doing structurally and possibly be able to modify the source.
