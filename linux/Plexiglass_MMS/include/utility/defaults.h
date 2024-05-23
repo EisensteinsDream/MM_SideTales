@@ -129,9 +129,6 @@ extern "C"
 	extern bool PLEX_getDefaultBool(const size_t index);
 	extern double PLEX_getDefaultDouble(const size_t index);
 	extern bool PLEX_getDefaultString(const size_t index, char* buffer, const size_t limit); // < experimental/untested
-
-	// now, this one is important for custom defaults. It returns whether or not the reload defautls flag has been checked this iteration. You can use this to gauge whether or not you need to reset aspects of a program reliant on defaults. Essentially, if PLEX is operating properly, it's true if the ctrl+f1 command is hit to reload the defaults and it's enabled. It's false if it's not.'
-	extern bool PLEX_defaultReloadFlag();
 #ifdef __cplusplus
 }
 #endif
